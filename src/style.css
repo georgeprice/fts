@@ -72,6 +72,22 @@ aside,
   border: 2px solid #92efbb;
 }
 
+.possible * {
+  border: 2px solid rgb(192, 255, 255);
+  color: rgb(192, 255, 255);
+}
+
+.impossible * {
+  border: 2px solid #e53a3a;
+  color: #e53a3a;
+  opacity: 50%;
+}
+
+.answered * {
+  border: 2px solid #92efbb;
+  color: #92efbb;
+}
+
 footer {
   flex-basis: 5%;
   text-align: center;
