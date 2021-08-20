@@ -1,0 +1,119 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+
+  background: radial-gradient(#173429, black);
+
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+* {
+  font-family: "Share Tech Mono", monospace;
+  color: #92efbb;
+}
+
+h1,
+h2 {
+  text-align: center;
+}
+
+header {
+  flex-grow: 0;
+  flex-basis: 10%;
+}
+
+main {
+  display: flex;
+  flex-grow: 1;
+  flex-flow: row nowrap;
+}
+
+main > * {
+  margin: 20px;
+}
+
+@media (orientation: portrait) {
+  main {
+    flex-flow: column nowrap;
+  }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+  background-color: #92efbb;
+  color: #173429;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+section,
+aside,
+.word,
+.matches,
+.delete,
+.add {
+  border: 2px solid #92efbb;
+}
+
+footer {
+  flex-basis: 5%;
+}
+
+section {
+  flex-grow: 1;
+}
+
+.entry {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  margin: 2%;
+}
+
+.word {
+  flex-grow: 1;
+  max-width: 80%;
+}
+
+.word,
+.matches,
+.delete,
+.add {
+  background: none;
+  padding: 5px;
+}
+
+.matches {
+  flex-grow: 0;
+  max-width: 5%;
+}
+
+.delete {
+  flex-grow: 0;
+  max-width: 5%;
+}
+
+.add {
+  margin: auto;
+}
+
+aside {
+  flex-basis: 30%;
+}
