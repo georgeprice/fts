@@ -74,6 +74,7 @@ aside,
 
 footer {
   flex-basis: 5%;
+  text-align: center;
 }
 
 section {
@@ -116,4 +117,5 @@ section {
 
 aside {
   flex-basis: 30%;
+  text-align: center;
 }
