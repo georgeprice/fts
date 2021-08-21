@@ -2,6 +2,11 @@ import Solve from "./Solve";
 import { useEffect, useState } from "react";
 import Entry from "./Entry";
 
+/**
+ * decode unpacks the url search parameters from a raw string and converts them into an array of {word, matches} ready to be made into entries
+ * @param {string} raw the string url-encoded query parameters
+ * @returns array of {word, matches} objects
+ */
 const decode = (raw) => {
   const params = new URLSearchParams(raw);
   let initial = [];
@@ -14,6 +19,11 @@ const decode = (raw) => {
   return initial;
 };
 
+/**
+ * encode converts the array of {word, matches} objects into url-encoded queries
+ * @param {[{word, matches}]} entries is the array of entry objects
+ * @returns url-encoded query strings
+ */
 const encode = (entries) => {
   let encoded = [];
   for (const [, { word, matches }] of entries.entries()) {
@@ -22,13 +32,18 @@ const encode = (entries) => {
   return `?${encoded.join("&")}`;
 };
 
+/**
+ * Entries maintains the state of words and matches that have been entered by the user, it will ensure the URL matches what has been entered and render the entries to the user
+ */
 const Entries = () => {
   const [entries, setEntries] = useState([]);
 
+  // initial load to decode the URL into entries
   useEffect(() => {
     setEntries(decode(window.location.search));
   }, []);
 
+  // whenever the entries change, encode them and push them onto the window history
   useEffect(() => {
     window.history.pushState("", "", encode(entries));
   }, [entries]);
@@ -54,6 +69,7 @@ const Entries = () => {
     tutorial = "Words must be same length";
   }
 
+  // callback passed into Entry objects to return their state changes back up the tree
   const onChange = ({ index, word, matches, deleted }) => {
     if (deleted === true) {
       let cloned = [...entries];

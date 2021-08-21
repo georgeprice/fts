@@ -78,9 +78,9 @@ aside,
 }
 
 .impossible * {
-  border: 2px solid #e53a3a;
-  color: #e53a3a;
-  opacity: 50%;
+  border: 2px solid #e53a3a !important;
+  color: #e53a3a !important;
+  opacity: 50% !important;
 }
 
 .answered * {
