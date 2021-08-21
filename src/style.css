@@ -172,29 +172,25 @@ main.white {
 
 .f3 input:focus,
 .f3 select:focus,
-.f3 textarea:focus,
-.f3 button:focus {
+.f3 textarea:focus {
   background-color: #92efbb;
 }
 
 .fnv input:focus,
 .fnv select:focus,
-.fnv textarea:focus,
-.fnv button:focus * {
+.fnv textarea:focus {
   background-color: #d4a450;
 }
 
 .blue input:focus,
 .blue select:focus,
-.blue textarea:focus,
-.blue button:focus * {
+.blue textarea:focus {
   background-color: #54c2e3;
 }
 
 .white input:focus,
 .white select:focus,
-.white textarea:focus,
-.white button:focus * {
+.white textarea:focus {
   background-color: #ccebe8;
 }
 
