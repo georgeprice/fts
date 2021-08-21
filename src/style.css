@@ -84,6 +84,10 @@ aside,
   opacity: 50% !important;
 }
 
+.selected * {
+  opacity: 50% !important;
+}
+
 .answered * {
   border: 2px solid #92efbb;
   color: #92efbb;

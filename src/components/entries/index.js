@@ -2,6 +2,7 @@ import Solve from "../../util";
 import { useEffect, useState } from "react";
 import Entry from "./entry";
 import Controls from "./controls";
+import Tutorial from "./tutorial";
 
 /**
  * decode unpacks the url search parameters from a raw string and converts them into an array of {word, matches} ready to be made into entries
@@ -38,6 +39,11 @@ const encode = (entries) => {
  */
 const Entries = () => {
   const [entries, setEntries] = useState([]);
+  const [solutions, setSolutions] = useState({});
+
+  let equalLength = entries
+    .map(({ word }) => word.length)
+    .every((length, i, arr) => length === arr[0] && length > 0);
 
   // initial load to decode the URL into entries
   useEffect(() => {
@@ -47,28 +53,8 @@ const Entries = () => {
   // whenever the entries change, encode them and push them onto the window history
   useEffect(() => {
     window.history.pushState("", "", encode(entries));
+    setSolutions(equalLength ? Solve(entries) : {});
   }, [entries]);
-
-  let equalLength = entries
-    .map(({ word }) => word.length)
-    .every((length, i, arr) => length === arr[0] && length > 0);
-
-  let [tutorial, solutions] = [null, {}];
-  if (entries.length == 0) {
-    tutorial = "Enter words";
-  } else if (equalLength) {
-    let total = 0;
-    [solutions, total] = Solve(entries);
-    if (total == 0) {
-      tutorial = `No possible solutions - check your inputs`;
-    } else if (total == 1) {
-      tutorial = `${total} possible solution`;
-    } else {
-      tutorial = `${total} possible solutions`;
-    }
-  } else {
-    tutorial = "Words must be same length";
-  }
 
   // callback passed into Entry objects to return their state changes back up the tree
   const onChange = ({ index, word, matches, deleted }) => {
@@ -84,7 +70,7 @@ const Entries = () => {
   };
   return (
     <section>
-      {tutorial ? <p>{tutorial}</p> : null}
+      <Tutorial entries={entries} solutions={solutions} />
       {entries.map(({ word, matches }, i) => (
         <Entry
           key={i}
@@ -92,7 +78,13 @@ const Entries = () => {
           word={word}
           matches={matches}
           onChange={onChange}
-          state={solutions[word]}
+          state={
+            solutions
+              ? solutions.possibles
+                ? solutions.possibles[word]
+                : "possible"
+              : "possible"
+          }
         />
       ))}
       <Controls

@@ -88,7 +88,7 @@ const Solve = (words) => {
       });
     }
   }
-  return [possibles, total];
+  return { possibles, total };
 };
 
 export const Difference = (a, b) => {
