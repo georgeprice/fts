@@ -10,8 +10,7 @@ const App = () => {
     .map(({ word }) => word.length)
     .every((length, i, arr) => length === arr[0] && length > 0);
 
-  let tutorial = null;
-  let solutions = {};
+  let [tutorial, solutions] = [null, {}];
   if (entries.length == 0) {
     tutorial = "Enter words";
   } else if (equalLength) {
