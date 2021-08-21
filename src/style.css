@@ -9,7 +9,8 @@ body {
   flex-flow: column nowrap;
 }
 
-* {
+*,
+option {
   font-family: "Share Tech Mono", monospace;
 }
 h1,
@@ -172,24 +173,28 @@ main.white {
 
 .f3 input:focus,
 .f3 select:focus,
+.f3 option:focus,
 .f3 textarea:focus {
   background-color: #92efbb;
 }
 
 .fnv input:focus,
 .fnv select:focus,
+.fnv option:focus,
 .fnv textarea:focus {
   background-color: #d4a450;
 }
 
 .blue input:focus,
 .blue select:focus,
+.blue option:focus,
 .blue textarea:focus {
   background-color: #54c2e3;
 }
 
 .white input:focus,
 .white select:focus,
+.white option:focus,
 .white textarea:focus {
   background-color: #ccebe8;
 }
