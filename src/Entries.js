@@ -13,7 +13,7 @@ const decode = (raw) => {
   for (const [word, matches] of params.entries()) {
     initial = initial.concat({
       word: word.toUpperCase(),
-      matches: parseInt(matches),
+      matches: parseInt(matches) || -1,
     });
   }
   return initial;
@@ -105,6 +105,28 @@ const Entries = () => {
         >
           Add
         </button>
+        {entries.length > 0 ? (
+          <button
+            type="button"
+            className="add"
+            onClick={() => {
+              setEntries([]);
+            }}
+          >
+            Clear
+          </button>
+        ) : null}
+        {entries.length > 0 ? (
+          <button
+            type="button"
+            className="add"
+            onClick={() => {
+              setEntries(entries.map(({ word }) => ({ word, matches: -1 })));
+            }}
+          >
+            Reset
+          </button>
+        ) : null}
       </div>
     </section>
   );
