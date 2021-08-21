@@ -4,52 +4,54 @@ import { useState } from "react";
 import Solve from "./Solve";
 
 const App = () => {
-  const [words, setWords] = useState(["", "", "", ""]);
-  const [matches, setMatches] = useState([-1, -1, -1, -1]);
+  const [entries, setEntries] = useState([]);
 
-  let deleteEntry = (index) => {
-    let cloned = [...words];
-    cloned.splice(index, 1);
-    setWords(cloned);
-  };
-
-  let updateWord = (index, word) => {
-    let cloned = [...words];
-    cloned[index] = word;
-    setWords(cloned);
-  };
-
-  let updateMatches = (index, matches) => {
-    let cloned = [...matches];
-    cloned[index] = matches;
-    setMatches(cloned);
-  };
-
-  let equalLength = words
-    .map((word) => word.length)
+  let equalLength = entries
+    .map(({ word }) => word.length)
     .every((length, i, arr) => length === arr[0] && length > 0);
 
+  let tutorial = null;
   let solutions = {};
-  if (equalLength) {
-    let state = words.map((_, i) => {
-      return { word: words[i], matches: matches[i] };
-    });
-    solutions = Solve(state);
-    console.table(solutions);
+  if (entries.length == 0) {
+    tutorial = "Enter words";
+  } else if (equalLength) {
+    let total = 0;
+    [solutions, total] = Solve(entries);
+    if (total == 0) {
+      tutorial = `No possible solutions - check your inputs`;
+    } else if (total == 1) {
+      tutorial = `${total} possible solution`;
+    } else {
+      tutorial = `${total} possible solutions`;
+    }
+  } else {
+    tutorial = "Words must be same length";
   }
+
+  const onChange = ({ index, word, matches, deleted }) => {
+    if (deleted === true) {
+      let cloned = [...entries];
+      cloned.splice(index, 1);
+      setEntries(cloned);
+      return;
+    }
+    let cloned = [...entries];
+    cloned[index] = { word, matches };
+    setEntries(cloned);
+  };
 
   return (
     <section>
       <h1>Enter Words:</h1>
-      {words.map((word, i) => (
+      {tutorial ? <p>{tutorial}</p> : null}
+      {entries.map(({ word, matches }, i) => (
         <Entry
           key={i}
+          index={i}
           word={word}
-          matches={matches[i]}
-          onDelete={() => deleteEntry(i)}
-          onWordChange={(word) => updateWord(i, word)}
-          onMatchesChange={(count) => updateMatches(i, count)}
-          possible={solutions[word]}
+          matches={matches}
+          onChange={onChange}
+          state={solutions[word]}
         />
       ))}
       <div className="entry">
@@ -57,8 +59,7 @@ const App = () => {
           type="button"
           className="add"
           onClick={() => {
-            setWords(words.concat(""));
-            setMatches(matches.concat(-1));
+            setEntries(entries.concat({ word: "", matches: -1 }));
           }}
         >
           Add

@@ -2,21 +2,24 @@ import Graph from "./Graph";
 import { Difference } from "./Utils";
 
 const Solve = (words) => {
-  console.log("solve", words);
   if (words.length < 2) {
-    return;
+    return [{}, 1];
   }
 
   let graph = new Graph(words, Difference);
-  console.log(graph);
   let possibles = {};
+  let total = 0;
   for (const start of graph.nodes) {
+    possibles = Object.assign(possibles, { [start]: "selected" });
     if (graph.matches[start] < 0) {
       let possible = graph.walk(start);
-      possibles = Object.assign(possibles, { [start]: possible });
+      total += possible ? 1 : 0;
+      possibles = Object.assign(possibles, {
+        [start]: possible ? "possible" : "impossible",
+      });
     }
   }
-  return possibles;
+  return [possibles, total];
 };
 
 export default Solve;
