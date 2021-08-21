@@ -1,6 +1,7 @@
-import Solve from "./Solve";
+import Solve from "../../util";
 import { useEffect, useState } from "react";
-import Entry from "./Entry";
+import Entry from "./entry";
+import Controls from "./controls";
 
 /**
  * decode unpacks the url search parameters from a raw string and converts them into an array of {word, matches} ready to be made into entries
@@ -83,7 +84,6 @@ const Entries = () => {
   };
   return (
     <section>
-      <h1>Enter Words:</h1>
       {tutorial ? <p>{tutorial}</p> : null}
       {entries.map(({ word, matches }, i) => (
         <Entry
@@ -95,39 +95,13 @@ const Entries = () => {
           state={solutions[word]}
         />
       ))}
-      <div className="entry">
-        <button
-          type="button"
-          className="add"
-          onClick={() => {
-            setEntries(entries.concat({ word: "", matches: -1 }));
-          }}
-        >
-          Add
-        </button>
-        {entries.length > 0 ? (
-          <button
-            type="button"
-            className="add"
-            onClick={() => {
-              setEntries([]);
-            }}
-          >
-            Clear
-          </button>
-        ) : null}
-        {entries.length > 0 ? (
-          <button
-            type="button"
-            className="add"
-            onClick={() => {
-              setEntries(entries.map(({ word }) => ({ word, matches: -1 })));
-            }}
-          >
-            Reset
-          </button>
-        ) : null}
-      </div>
+      <Controls
+        onAdd={() => setEntries(entries.concat({ word: "", matches: -1 }))}
+        onClear={() => setEntries([])}
+        onReset={() =>
+          setEntries(entries.map(({ word }) => ({ word, matches: -1 })))
+        }
+      />
     </section>
   );
 };

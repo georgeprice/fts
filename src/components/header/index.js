@@ -1,4 +1,4 @@
-import ThemeContext from "./Theme";
+import ThemeContext from "../theme";
 import { useContext } from "react";
 
 const THEMES = ["f3", "fnv", "blue", "white"];

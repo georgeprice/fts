@@ -1,5 +1,3 @@
-import { Difference } from "./Utils";
-
 /**
  * Graph describes a set of interconnected nodes, with distances between them
  */
@@ -91,6 +89,17 @@ const Solve = (words) => {
     }
   }
   return [possibles, total];
+};
+
+export const Difference = (a, b) => {
+  let total = 0;
+  for (let i = 0; i < a.length; i++) {
+    if (i >= b.length) {
+      return total;
+    }
+    total += a[i] !== b[i] ? 1 : 0;
+  }
+  return total;
 };
 
 export default Solve;

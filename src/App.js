@@ -1,8 +1,8 @@
 import ReactDOM from "react-dom";
 import { useState } from "react";
-import ThemeContext from "./Theme";
-import Header from "./Header";
-import Entries from "./Entries";
+import ThemeContext from "./components/theme";
+import Header from "./components/header";
+import Entries from "./components/entries";
 
 const App = () => {
   const theme = useState("f3");
