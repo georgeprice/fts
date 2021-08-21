@@ -5,17 +5,13 @@ body {
   margin: 0;
   padding: 0;
 
-  background: radial-gradient(#173429, black);
-
   display: flex;
   flex-flow: column nowrap;
 }
 
 * {
   font-family: "Share Tech Mono", monospace;
-  color: #92efbb;
 }
-
 h1,
 h2,
 p {
@@ -25,12 +21,15 @@ p {
 header {
   flex-grow: 0;
   flex-basis: 10%;
+  flex-flow: column nowrap;
+  display: flex;
+  align-items: center;
 }
 
 main {
   display: flex;
   flex-grow: 1;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
 }
 
 main > * {
@@ -52,10 +51,8 @@ input::-webkit-inner-spin-button {
 
 input:focus,
 select:focus,
-textarea:focus,
-button:focus {
+textarea:focus {
   outline: none;
-  background-color: #92efbb;
   color: #173429;
 }
 
@@ -69,8 +66,10 @@ aside,
 .word,
 .matches,
 .delete,
-.add {
-  border: 2px solid #92efbb;
+.add,
+.theme {
+  background: none;
+  border: 2px solid wheat;
 }
 
 .possible * {
@@ -135,4 +134,106 @@ section {
 aside {
   flex-basis: 30%;
   text-align: center;
+}
+
+/* THEMES */
+
+main.f3 {
+  background: radial-gradient(#173429, black);
+}
+
+main.fnv {
+  background: radial-gradient(#4a3c25, black);
+}
+
+main.blue {
+  background: radial-gradient(#384853, black);
+}
+
+main.white {
+  background: radial-gradient(#393c34, black);
+}
+
+.f3 * {
+  color: #92efbb;
+}
+
+.fnv * {
+  color: #d4a450;
+}
+
+.blue * {
+  color: #54c2e3;
+}
+
+.white * {
+  color: #ccebe8;
+}
+
+.f3 input:focus,
+.f3 select:focus,
+.f3 textarea:focus,
+.f3 button:focus {
+  background-color: #92efbb;
+}
+
+.fnv input:focus,
+.fnv select:focus,
+.fnv textarea:focus,
+.fnv button:focus * {
+  background-color: #d4a450;
+}
+
+.blue input:focus,
+.blue select:focus,
+.blue textarea:focus,
+.blue button:focus * {
+  background-color: #54c2e3;
+}
+
+.white input:focus,
+.white select:focus,
+.white textarea:focus,
+.white button:focus * {
+  background-color: #ccebe8;
+}
+
+.f3 section,
+.f3 aside,
+.f3 .word,
+.f3 .matches,
+.f3 .delete,
+.f3 .add,
+.f3 .theme {
+  border-color: #92efbb;
+}
+
+.fnv section,
+.fnv aside,
+.fnv .word,
+.fnv .matches,
+.fnv .delete,
+.fnv .add,
+.fnv .theme {
+  border-color: #d4a450;
+}
+
+.blue section,
+.blue aside,
+.blue .word,
+.blue .matches,
+.blue .delete,
+.blue .add,
+.blue .theme {
+  border-color: #54c2e3;
+}
+
+.white section,
+.white aside,
+.white .word,
+.white .matches,
+.white .delete,
+.white .add,
+.white .theme {
+  border-color: #ccebe8;
 }
