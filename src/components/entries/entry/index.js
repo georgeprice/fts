@@ -27,7 +27,7 @@ const Entry = ({
         placeholder={"Enter word"}
         value={word}
         disabled={state === "impossible"}
-        onKeyDown={key}
+        onKeyDown={(event) => key(event.key)}
       />
       <input
         type="number"

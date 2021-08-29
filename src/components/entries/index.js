@@ -57,35 +57,35 @@ const Entries = () => {
     setSolutions(equalLength ? Solve(entries) : {});
   }, [entries]);
 
-  const entryCallbacks = (index) => ({
-    update: onUpdate(index),
-    deleted: onDelete(index),
-    selected: onSelected(index),
-    key: onKey(index),
-  });
-
-  const onUpdate = (index) => (word, matches) => {
-    let cloned = [...entries];
-    cloned[index] = { word, matches };
-    setEntries(cloned);
+  const onAdd = () => {
+    setEntries(entries.concat({ word: "", matches: -1 }));
+    setFocus(entries.length);
   };
+  const onClear = () => setEntries([]);
+  const onReset = () =>
+    setEntries(entries.map(({ word }) => ({ word, matches: -1 })));
 
-  const onDelete = (index) => () => {
-    let cloned = [...entries];
-    cloned.splice(index, 1);
-    setFocus(index - 1);
-    setEntries(cloned);
-  };
-
-  const onSelected = (index) => () => {
-    if (index < entries.length) {
-      setFocus(index);
-    }
-  };
-
-  const onKey =
-    (index) =>
-    ({ key }) => {
+  function EntryController(index) {
+    this.update = (word, matches) => {
+      if (index !== focus) {
+        return;
+      }
+      let cloned = [...entries];
+      cloned[index] = { word, matches };
+      setEntries(cloned);
+    };
+    this.deleted = () => {
+      let cloned = [...entries];
+      cloned.splice(index, 1);
+      setFocus(index - 1);
+      setEntries(cloned);
+    };
+    this.selected = () => {
+      if (index < entries.length) {
+        setFocus(index);
+      }
+    };
+    this.key = (key) => {
       switch (key) {
         case "Enter":
           if (index === entries.length - 1) {
@@ -96,20 +96,26 @@ const Entries = () => {
           break;
         case "Backspace":
           if (entries[index].word.length === 0) {
-            onDelete(index)();
+            this.deleted();
+          }
+          break;
+        case "ArrowUp":
+          if (focus === 0) {
+            setFocus(entries.length - 1);
+          } else {
+            setFocus(focus - 1);
+          }
+          break;
+        case "ArrowDown":
+          if (focus === entries.length - 1) {
+            setFocus(0);
+          } else {
+            setFocus(focus + 1);
           }
           break;
       }
     };
-
-  const onAdd = () => {
-    setEntries(entries.concat({ word: "", matches: -1 }));
-    setFocus(entries.length);
-  };
-
-  const onClear = () => setEntries([]);
-  const onReset = () =>
-    setEntries(entries.map(({ word }) => ({ word, matches: -1 })));
+  }
 
   return (
     <section>
@@ -121,7 +127,7 @@ const Entries = () => {
             index={i}
             word={word}
             matches={matches}
-            on={entryCallbacks(i)}
+            on={new EntryController(i)}
             focus={i === focus}
             state={
               solutions
