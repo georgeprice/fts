@@ -1,5 +1,70 @@
 import { useEffect, useRef } from "react";
 
+export class EntryController {
+  constructor(index, entries, setEntries, focus, setFocus, onAdd) {
+    this.update = {
+      word: (word) => {
+        {
+          if (index !== focus) {
+            return;
+          }
+          let cloned = [...entries];
+          cloned[index].word = word;
+          setEntries(cloned);
+        }
+      },
+      matches: (matches) => {
+        {
+          let cloned = [...entries];
+          cloned[index].matches = matches;
+          setEntries(cloned);
+        }
+      },
+    };
+    this.deleted = () => {
+      let cloned = [...entries];
+      cloned.splice(index, 1);
+      setFocus(index - 1);
+      setEntries(cloned);
+    };
+    this.selected = () => {
+      if (index < entries.length) {
+        setFocus(index);
+      }
+    };
+    this.key = (key) => {
+      switch (key) {
+        case "Enter":
+          if (index === entries.length - 1) {
+            onAdd();
+          } else {
+            setFocus(index + 1);
+          }
+          break;
+        case "Backspace":
+          if (entries[index].word.length === 0) {
+            this.deleted();
+          }
+          break;
+        case "ArrowUp":
+          if (focus === 0) {
+            setFocus(entries.length - 1);
+          } else {
+            setFocus(index - 1);
+          }
+          break;
+        case "ArrowDown":
+          if (focus === entries.length - 1) {
+            setFocus(0);
+          } else {
+            setFocus(index + 1);
+          }
+          break;
+      }
+    };
+  }
+}
+
 const Entry = ({
   model: { word, matches, focus, state },
   controller: { update, deleted, selected, key },

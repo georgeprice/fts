@@ -1,6 +1,6 @@
 import Solve from "../../util";
 import { useEffect, useState } from "react";
-import Entry from "./entry";
+import Entry, { EntryController } from "./entry";
 import Controls from "./controls";
 import Tutorial from "./tutorial";
 
@@ -64,78 +64,19 @@ const Entries = () => {
   const onReset = () =>
     setEntries(entries.map(({ word }) => ({ word, matches: -1 })));
 
-  class EntryController {
-    constructor(index) {
-      this.update = {
-        word: (word) => {
-          {
-            if (index !== focus) {
-              return;
-            }
-            let cloned = [...entries];
-            cloned[index].word = word;
-            setEntries(cloned);
-          }
-        },
-        matches: (matches) => {
-          {
-            let cloned = [...entries];
-            cloned[index].matches = matches;
-            setEntries(cloned);
-          }
-        },
-      };
-      this.deleted = () => {
-        let cloned = [...entries];
-        cloned.splice(index, 1);
-        setFocus(index - 1);
-        setEntries(cloned);
-      };
-      this.selected = () => {
-        if (index < entries.length) {
-          setFocus(index);
-        }
-      };
-      this.key = (key) => {
-        console.log("key: ", key);
-        switch (key) {
-          case "Enter":
-            if (index === entries.length - 1) {
-              onAdd();
-            } else {
-              setFocus(index + 1);
-            }
-            break;
-          case "Backspace":
-            if (entries[index].word.length === 0) {
-              this.deleted();
-            }
-            break;
-          case "ArrowUp":
-            if (focus === 0) {
-              setFocus(entries.length - 1);
-            } else {
-              setFocus(focus - 1);
-            }
-            break;
-          case "ArrowDown":
-            if (focus === entries.length - 1) {
-              setFocus(0);
-            } else {
-              setFocus(focus + 1);
-            }
-            break;
-        }
-      };
-    }
-  }
-
   return (
     <section>
       <Tutorial entries={entries} solutions={solutions} />
       <div className="entries">
         {entries.map(({ word, matches }, i) => {
-          let controller = new EntryController(i);
+          let controller = new EntryController(
+            i,
+            entries,
+            setEntries,
+            focus,
+            setFocus,
+            onAdd
+          );
           let state = solutions
             ? solutions.possibles
               ? solutions.possibles[word]
