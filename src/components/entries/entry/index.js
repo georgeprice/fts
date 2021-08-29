@@ -1,11 +1,8 @@
 import { useEffect, useRef } from "react";
 
 const Entry = ({
-  word,
-  matches,
-  on: { update, deleted, selected, key },
-  focus,
-  state,
+  model: { word, matches, focus, state },
+  controller: { update, deleted, selected, key },
 }) => {
   const textInput = useRef(null);
 
@@ -20,7 +17,7 @@ const Entry = ({
       <input
         type="text"
         className="word"
-        onChange={(event) => update(event.target.value.toUpperCase(), matches)}
+        onChange={(event) => update.word(event.target.value.toUpperCase())}
         onSelect={selected}
         onClick={selected}
         ref={textInput}
@@ -34,7 +31,7 @@ const Entry = ({
         min="0"
         className="matches"
         value={matches}
-        onChange={(event) => update(word, parseInt(event.target.value))}
+        onChange={(event) => update.matches(parseInt(event.target.value))}
         disabled={state === "impossible"}
       />
       <button type="button" className="delete" onClick={deleted}>

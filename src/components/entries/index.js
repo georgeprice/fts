@@ -42,10 +42,6 @@ const Entries = () => {
   const [solutions, setSolutions] = useState({});
   const [focus, setFocus] = useState(-1);
 
-  let equalLength = entries
-    .map(({ word }) => word.length)
-    .every((length, i, arr) => length === arr[0] && length > 0);
-
   // initial load to decode the URL into entries
   useEffect(() => {
     setEntries(decode(window.location.search));
@@ -54,6 +50,9 @@ const Entries = () => {
   // whenever the entries change, encode them and push them onto the window history
   useEffect(() => {
     window.history.pushState("", "", encode(entries));
+    let equalLength = entries
+      .map(({ word }) => word.length)
+      .every((length, _, arr) => length === arr[0] && length > 0);
     setSolutions(equalLength ? Solve(entries) : {});
   }, [entries]);
 
@@ -65,79 +64,93 @@ const Entries = () => {
   const onReset = () =>
     setEntries(entries.map(({ word }) => ({ word, matches: -1 })));
 
-  function EntryController(index) {
-    this.update = (word, matches) => {
-      if (index !== focus) {
-        return;
-      }
-      let cloned = [...entries];
-      cloned[index] = { word, matches };
-      setEntries(cloned);
-    };
-    this.deleted = () => {
-      let cloned = [...entries];
-      cloned.splice(index, 1);
-      setFocus(index - 1);
-      setEntries(cloned);
-    };
-    this.selected = () => {
-      if (index < entries.length) {
-        setFocus(index);
-      }
-    };
-    this.key = (key) => {
-      switch (key) {
-        case "Enter":
-          if (index === entries.length - 1) {
-            onAdd();
-          } else {
-            setFocus(index + 1);
+  class EntryController {
+    constructor(index) {
+      this.update = {
+        word: (word) => {
+          {
+            if (index !== focus) {
+              return;
+            }
+            let cloned = [...entries];
+            cloned[index].word = word;
+            setEntries(cloned);
           }
-          break;
-        case "Backspace":
-          if (entries[index].word.length === 0) {
-            this.deleted();
+        },
+        matches: (matches) => {
+          {
+            let cloned = [...entries];
+            cloned[index].matches = matches;
+            setEntries(cloned);
           }
-          break;
-        case "ArrowUp":
-          if (focus === 0) {
-            setFocus(entries.length - 1);
-          } else {
-            setFocus(focus - 1);
-          }
-          break;
-        case "ArrowDown":
-          if (focus === entries.length - 1) {
-            setFocus(0);
-          } else {
-            setFocus(focus + 1);
-          }
-          break;
-      }
-    };
+        },
+      };
+      this.deleted = () => {
+        let cloned = [...entries];
+        cloned.splice(index, 1);
+        setFocus(index - 1);
+        setEntries(cloned);
+      };
+      this.selected = () => {
+        if (index < entries.length) {
+          setFocus(index);
+        }
+      };
+      this.key = (key) => {
+        console.log("key: ", key);
+        switch (key) {
+          case "Enter":
+            if (index === entries.length - 1) {
+              onAdd();
+            } else {
+              setFocus(index + 1);
+            }
+            break;
+          case "Backspace":
+            if (entries[index].word.length === 0) {
+              this.deleted();
+            }
+            break;
+          case "ArrowUp":
+            if (focus === 0) {
+              setFocus(entries.length - 1);
+            } else {
+              setFocus(focus - 1);
+            }
+            break;
+          case "ArrowDown":
+            if (focus === entries.length - 1) {
+              setFocus(0);
+            } else {
+              setFocus(focus + 1);
+            }
+            break;
+        }
+      };
+    }
   }
 
   return (
     <section>
       <Tutorial entries={entries} solutions={solutions} />
       <div className="entries">
-        {entries.map(({ word, matches }, i) => (
-          <Entry
-            key={i}
-            index={i}
-            word={word}
-            matches={matches}
-            on={new EntryController(i)}
-            focus={i === focus}
-            state={
-              solutions
-                ? solutions.possibles
-                  ? solutions.possibles[word]
-                  : "possible"
-                : "possible"
-            }
-          />
-        ))}
+        {entries.map(({ word, matches }, i) => {
+          let controller = new EntryController(i);
+          let state = solutions
+            ? solutions.possibles
+              ? solutions.possibles[word]
+              : "possible"
+            : "possible";
+          let model = {
+            word,
+            matches,
+            focus: i === focus,
+            state,
+          };
+          return (
+            <Entry key={i} index={i} model={model} controller={controller} />
+          );
+        })}
       </div>
       <Controls onAdd={onAdd} onClear={onClear} onReset={onReset} />
     </section>
