@@ -40,6 +40,7 @@ const encode = (entries) => {
 const Entries = () => {
   const [entries, setEntries] = useState([]);
   const [solutions, setSolutions] = useState({});
+  const [focus, setFocus] = useState(-1);
 
   let equalLength = entries
     .map(({ word }) => word.length)
@@ -58,16 +59,40 @@ const Entries = () => {
 
   // callback passed into Entry objects to return their state changes back up the tree
   const onChange = ({ index, word, matches, deleted }) => {
-    if (deleted === true) {
-      let cloned = [...entries];
-      cloned.splice(index, 1);
-      setEntries(cloned);
-      return;
-    }
     let cloned = [...entries];
-    cloned[index] = { word, matches };
+    if (deleted === true) {
+      cloned.splice(index, 1);
+      setFocus(index - 1);
+    } else {
+      cloned[index] = { word, matches };
+      setEntries(cloned);
+    }
     setEntries(cloned);
   };
+
+  const onDone = (index) => {
+    if (index === entries.length - 1) {
+      onAdd();
+    } else {
+      setFocus(index + 1);
+    }
+  };
+
+  const onSelected = (index) => {
+    if (index < entries.length) {
+      setFocus(index);
+    }
+  };
+
+  const onAdd = () => {
+    setEntries(entries.concat({ word: "", matches: -1 }));
+    setFocus(entries.length);
+  };
+
+  const onClear = () => setEntries([]);
+  const onReset = () =>
+    setEntries(entries.map(({ word }) => ({ word, matches: -1 })));
+
   return (
     <section>
       <Tutorial entries={entries} solutions={solutions} />
@@ -78,7 +103,12 @@ const Entries = () => {
             index={i}
             word={word}
             matches={matches}
-            onChange={onChange}
+            on={{
+              change: onChange,
+              done: () => onDone(i),
+              selected: () => onSelected(i),
+            }}
+            focus={i === focus}
             state={
               solutions
                 ? solutions.possibles
@@ -89,13 +119,7 @@ const Entries = () => {
           />
         ))}
       </div>
-      <Controls
-        onAdd={() => setEntries(entries.concat({ word: "", matches: -1 }))}
-        onClear={() => setEntries([])}
-        onReset={() =>
-          setEntries(entries.map(({ word }) => ({ word, matches: -1 })))
-        }
-      />
+      <Controls onAdd={onAdd} onClear={onClear} onReset={onReset} />
     </section>
   );
 };
