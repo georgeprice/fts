@@ -1,40 +1,13 @@
 import { useEffect, useRef } from "react";
 
 const Entry = ({
-  index,
   word,
   matches,
-  on: { change, done, selected },
+  on: { update, deleted, selected, key },
   focus,
   state,
 }) => {
   const textInput = useRef(null);
-
-  const onWordChange = (event) => {
-    change({ index, word: event.target.value.toUpperCase(), matches });
-  };
-
-  const onMatchesChange = (event) => {
-    change({ index, word, matches: parseInt(event.target.value) });
-  };
-
-  const onDelete = () => {
-    change({ index, deleted: true });
-  };
-
-  const keyListener = (key) => {
-    console.log(key);
-    switch (key) {
-      case "Enter":
-        done();
-        break;
-      case "Backspace":
-        if (word.length === 0) {
-          onDelete();
-        }
-        break;
-    }
-  };
 
   useEffect(() => {
     if (focus) {
@@ -47,24 +20,24 @@ const Entry = ({
       <input
         type="text"
         className="word"
-        onChange={onWordChange}
+        onChange={(event) => update(event.target.value.toUpperCase(), matches)}
         onSelect={selected}
         onClick={selected}
         ref={textInput}
         placeholder={"Enter word"}
         value={word}
         disabled={state === "impossible"}
-        onKeyDown={({ key }) => keyListener(key)}
+        onKeyDown={key}
       />
       <input
         type="number"
         min="0"
         className="matches"
         value={matches}
-        onChange={onMatchesChange}
+        onChange={(event) => update(word, parseInt(event.target.value))}
         disabled={state === "impossible"}
       />
-      <button type="button" className="delete" onClick={onDelete}>
+      <button type="button" className="delete" onClick={deleted}>
         X
       </button>
     </div>

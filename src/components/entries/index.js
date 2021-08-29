@@ -57,32 +57,50 @@ const Entries = () => {
     setSolutions(equalLength ? Solve(entries) : {});
   }, [entries]);
 
-  // callback passed into Entry objects to return their state changes back up the tree
-  const onChange = ({ index, word, matches, deleted }) => {
+  const entryCallbacks = (index) => ({
+    update: onUpdate(index),
+    deleted: onDelete(index),
+    selected: onSelected(index),
+    key: onKey(index),
+  });
+
+  const onUpdate = (index) => (word, matches) => {
     let cloned = [...entries];
-    if (deleted === true) {
-      cloned.splice(index, 1);
-      setFocus(index - 1);
-    } else {
-      cloned[index] = { word, matches };
-      setEntries(cloned);
-    }
+    cloned[index] = { word, matches };
     setEntries(cloned);
   };
 
-  const onDone = (index) => {
-    if (index === entries.length - 1) {
-      onAdd();
-    } else {
-      setFocus(index + 1);
-    }
+  const onDelete = (index) => () => {
+    let cloned = [...entries];
+    cloned.splice(index, 1);
+    setFocus(index - 1);
+    setEntries(cloned);
   };
 
-  const onSelected = (index) => {
+  const onSelected = (index) => () => {
     if (index < entries.length) {
       setFocus(index);
     }
   };
+
+  const onKey =
+    (index) =>
+    ({ key }) => {
+      switch (key) {
+        case "Enter":
+          if (index === entries.length - 1) {
+            onAdd();
+          } else {
+            setFocus(index + 1);
+          }
+          break;
+        case "Backspace":
+          if (entries[index].word.length === 0) {
+            onDelete(index)();
+          }
+          break;
+      }
+    };
 
   const onAdd = () => {
     setEntries(entries.concat({ word: "", matches: -1 }));
@@ -103,11 +121,7 @@ const Entries = () => {
             index={i}
             word={word}
             matches={matches}
-            on={{
-              change: onChange,
-              done: () => onDone(i),
-              selected: () => onSelected(i),
-            }}
+            on={entryCallbacks(i)}
             focus={i === focus}
             state={
               solutions
