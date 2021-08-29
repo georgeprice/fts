@@ -71,22 +71,24 @@ const Entries = () => {
   return (
     <section>
       <Tutorial entries={entries} solutions={solutions} />
-      {entries.map(({ word, matches }, i) => (
-        <Entry
-          key={i}
-          index={i}
-          word={word}
-          matches={matches}
-          onChange={onChange}
-          state={
-            solutions
-              ? solutions.possibles
-                ? solutions.possibles[word]
+      <div className="entries">
+        {entries.map(({ word, matches }, i) => (
+          <Entry
+            key={i}
+            index={i}
+            word={word}
+            matches={matches}
+            onChange={onChange}
+            state={
+              solutions
+                ? solutions.possibles
+                  ? solutions.possibles[word]
+                  : "possible"
                 : "possible"
-              : "possible"
-          }
-        />
-      ))}
+            }
+          />
+        ))}
+      </div>
       <Controls
         onAdd={() => setEntries(entries.concat({ word: "", matches: -1 }))}
         onClear={() => setEntries([])}

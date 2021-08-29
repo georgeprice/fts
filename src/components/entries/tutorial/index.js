@@ -21,7 +21,7 @@ const Tutorial = ({ entries, solutions: { total } }) => {
   if (tutorial === null) {
     return tutorial;
   }
-  return <p>{tutorial}</p>;
+  return <p className={"tutorial"}>{tutorial}</p>;
 };
 
 export default Tutorial;

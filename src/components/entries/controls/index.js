@@ -1,6 +1,6 @@
 const Controls = ({ onAdd, onClear, onReset }) => {
   return (
-    <div className="entry">
+    <div className="entry controls">
       <button type="button" className="add" onClick={onAdd}>
         Add
       </button>
